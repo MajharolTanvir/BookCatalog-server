@@ -7,4 +7,18 @@ export type IUser = {
   password: string;
 };
 
+export type IUserLogin = {
+  email: string;
+  password: string;
+};
+
+export type IUserLoginResponse = {
+  accessToken: string;
+  refreshToken?: string;
+};
+
+export type IRefreshTokenResponse = {
+  accessToken: string;
+};
+
 export type UserModel = Model<IUser, Record<string, unknown>>;
