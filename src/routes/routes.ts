@@ -1,6 +1,6 @@
 import express from "express";
-import { UserRoutes } from "../app/modules/User/user.service";
 import { BookRoutes } from "../app/modules/Book/book.route";
+import { UserRoutes } from "../app/modules/User/user.route";
 const router = express.Router();
 
 const moduleRoutes = [

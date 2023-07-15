@@ -1,26 +1,31 @@
-import express from "express";
+import httpStatus from "http-status";
+import ApiError from "../../../errors/ApiError";
+import { IUser } from "./user.interface";
+import { User } from "./user.model";
+import config from "../../../config";
+import { Secret } from "jsonwebtoken";
+import { JwtHelper } from "../../../helper/jwtHelper";
 
-const router = express.Router();
+const signUpUser = async (userData: IUser) => {
+  const createdUser = await User.create(userData);
 
-// router.post(
-//   "/create-student",
-//   validationRequest(UserValidation.createStudentZodSchema),
-//   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-//   UserController.createStudent,
-// );
+  if (!createdUser) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Failed To Sign Up");
+  }
 
-// router.post(
-//   "/create-faculty",
-//   validationRequest(UserValidation.createFacultyZodSchema),
-//   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-//   UserController.createFaculty,
-// );
+  const { email: userEmail } = createdUser;
+  const accessToken = JwtHelper.createToken(
+    { userEmail },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string,
+  );
 
-// router.post(
-//   "/create-admin",
-//   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-//   validationRequest(UserValidation.createAdminZodSchema),
-//   UserController.createAdmin,
-// );
+  return {
+    createdUser,
+    accessToken,
+  };
+};
 
-export const UserRoutes = router;
+export const UserService = {
+  signUpUser,
+};

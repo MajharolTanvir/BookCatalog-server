@@ -13,7 +13,7 @@ app.use(cookieParser());
 
 app.use(globalErrorHandler);
 
-app.use("api/v1/", routes);
+app.use("/api/v1/", routes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
