@@ -27,10 +27,10 @@ module.exports = {
   plugins: ["@typescript-eslint", "react"],
   rules: {
     "no-unused-vars": "error",
-      "no-console": "warn",
-      "no-undef": "error",
-      "no-unused-expressions": "error",
-      "no-unreachable": "error",
+    "no-console": "warn",
+    "no-undef": "error",
+    "no-unused-expressions": "error",
+    "no-unreachable": "error",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
   },
 };
