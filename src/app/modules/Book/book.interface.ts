@@ -11,7 +11,6 @@ export type IBook = {
   genre: string;
   publicationDate: Date;
   addedBy: string;
-  review?: IReview[];
 };
 
 export type BookModel = Model<IBook, Record<string, unknown>>;
