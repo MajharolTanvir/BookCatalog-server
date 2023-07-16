@@ -1,68 +1,57 @@
 "use strict";
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const ApiError_1 = __importDefault(require("../../errors/ApiError"));
-const handleValidationError_1 = require("../../errors/handleValidationError");
 const config_1 = __importDefault(require("../../config"));
-const handleDuplicateError_1 = __importDefault(
-  require("../../errors/handleDuplicateError"),
-);
-const globalErrorHandler = (err, req, res, next) => {
-  res.status(400).json({ err: err });
-  let statusCode = 500;
-  let message = "Something went wrong";
-  let errorMessages = [];
-  if (
-    (err === null || err === void 0 ? void 0 : err.name) === "ValidationError"
-  ) {
-    const simplifiedError = (0, handleValidationError_1.handleValidationError)(
-      err,
-    );
-    statusCode = simplifiedError.statusCode;
-    message = simplifiedError.message;
-    errorMessages = simplifiedError.errorMessages;
-  } else if (err.name === "MongoServerError" && err.code === 11000) {
-    const simplifiedError = (0, handleDuplicateError_1.default)(err);
-    statusCode = simplifiedError.statusCode;
-    message = simplifiedError.message;
-    errorMessages = simplifiedError.errorMessages;
-  } else if (err instanceof ApiError_1.default) {
-    statusCode = err === null || err === void 0 ? void 0 : err.statusCode;
-    message = err === null || err === void 0 ? void 0 : err.message;
-    errorMessages = (err === null || err === void 0 ? void 0 : err.message)
-      ? [
-          {
-            path: "",
-            message: err === null || err === void 0 ? void 0 : err.message,
-          },
-        ]
-      : [];
-  } else if (err instanceof Error) {
-    message = err === null || err === void 0 ? void 0 : err.message;
-    errorMessages = (err === null || err === void 0 ? void 0 : err.message)
-      ? [
-          {
-            path: "",
-            message: err === null || err === void 0 ? void 0 : err.message,
-          },
-        ]
-      : [];
-  }
-  res.status(statusCode).json({
-    success: false,
-    message,
-    errorMessages,
-    stack:
-      config_1.default.env !== "production"
-        ? err === null || err === void 0
-          ? void 0
-          : err.stack
-        : undefined,
-  });
-  next();
+const ApiError_1 = __importDefault(require("../../errors/ApiError"));
+const handleDuplicateError_1 = __importDefault(require("../../errors/handleDuplicateError"));
+const handleValidationError_1 = require("../../errors/handleValidationError");
+const globalErrorHandler = (error, req, res, next) => {
+    let statusCode = 500;
+    let message = "Something went wrong";
+    let errorMessages = [];
+    if ((error === null || error === void 0 ? void 0 : error.name) === "ValidationError") {
+        const simplifiedError = (0, handleValidationError_1.handleValidationError)(error);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessages = simplifiedError.errorMessages;
+    }
+    else if (error.name === "MongoServerError" && error.code === 11000) {
+        const simplifiedError = (0, handleDuplicateError_1.default)(error);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessages = simplifiedError.errorMessages;
+    }
+    else if (error instanceof Error) {
+        message = error === null || error === void 0 ? void 0 : error.message;
+        errorMessages = (error === null || error === void 0 ? void 0 : error.message)
+            ? [
+                {
+                    path: "",
+                    message: error === null || error === void 0 ? void 0 : error.message,
+                },
+            ]
+            : [];
+    }
+    else if (error instanceof ApiError_1.default) {
+        statusCode = error === null || error === void 0 ? void 0 : error.statusCode;
+        message = error === null || error === void 0 ? void 0 : error.message;
+        errorMessages = (error === null || error === void 0 ? void 0 : error.message)
+            ? [
+                {
+                    path: "",
+                    message: error === null || error === void 0 ? void 0 : error.message,
+                },
+            ]
+            : [];
+    }
+    res.status(statusCode).json({
+        success: false,
+        message,
+        errorMessages,
+        stack: config_1.default.env !== "production" ? error === null || error === void 0 ? void 0 : error.stack : undefined,
+    });
+    next();
 };
 exports.default = globalErrorHandler;
