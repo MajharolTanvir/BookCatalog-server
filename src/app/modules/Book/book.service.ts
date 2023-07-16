@@ -51,7 +51,11 @@ const getAllBooks = async (filters: IBookFilters) => {
 
 const getSingleBook = async (id: string) => {
   const book = await Book.findOne({ _id: id });
-  return book;
+  if (book) {
+    return book;
+  } else {
+    return "The Book is not found";
+  }
 };
 
 const updateBook = async (id: string, updatedData: IBook, user: JwtPayload) => {
