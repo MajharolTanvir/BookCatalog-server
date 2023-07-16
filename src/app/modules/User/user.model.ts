@@ -30,7 +30,18 @@ const UserSchema = new Schema<IUser, UserModel>(
         unique: true,
       },
       status: {
-        enum: ["Buying soon", "Reading", "Reading soon", "Finished"],
+        type: String,
+        validate: {
+          validator: function (value: string) {
+            return [
+              "Buying soon",
+              "Reading",
+              "Reading soon",
+              "Finished",
+            ].includes(value);
+          },
+          message: "Invalid status value",
+        },
       },
     },
   },
