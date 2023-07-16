@@ -3,6 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/middleware/globalErrorHndler";
 import routes from "./routes/routes";
+import sendResponse from "./shared/sendResponse";
+import httpStatus from "http-status";
 
 const app = express();
 
@@ -16,7 +18,11 @@ app.use(globalErrorHandler);
 app.use("/api/v1/", routes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Server is running successfully!",
+  });
 });
 
 export default app;

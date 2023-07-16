@@ -1,46 +1,45 @@
 import { ErrorRequestHandler } from "express";
-import ApiError from "../../errors/ApiError";
-import { handleValidationError } from "../../errors/handleValidationError";
-import { IGenericErrorMessage } from "../../Interface/error";
 import config from "../../config";
+import ApiError from "../../errors/ApiError";
 import handleDuplicateError from "../../errors/handleDuplicateError";
+import { IGenericErrorMessage } from "../../Interface/error";
+import { handleValidationError } from "../../errors/handleValidationError";
 
-const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  res.status(400).json({ err: err });
-
+const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let statusCode = 500;
   let message = "Something went wrong";
   let errorMessages: IGenericErrorMessage[] = [];
 
-  if (err?.name === "ValidationError") {
-    const simplifiedError = handleValidationError(err);
-    statusCode = simplifiedError.statusCode;
-    message = simplifiedError.message;
-    errorMessages = simplifiedError.errorMessages;
-  } else if (err.name === "MongoServerError" && err.code === 11000) {
-    const simplifiedError = handleDuplicateError(err);
+  if (error?.name === "ValidationError") {
+    const simplifiedError = handleValidationError(error);
 
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorMessages = simplifiedError.errorMessages;
-  } else if (err instanceof ApiError) {
-    statusCode = err?.statusCode;
-    message = err?.message;
-    errorMessages = err?.message
+  } else if (error.name === "MongoServerError" && error.code === 11000) {
+    const simplifiedError = handleDuplicateError(error);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  } else if (error instanceof Error) {
+    message = error?.message;
+    errorMessages = error?.message
       ? [
           {
             path: "",
-            message: err?.message,
+            message: error?.message,
           },
         ]
       : [];
-  } else if (err instanceof Error) {
-    message = err?.message;
-    errorMessages = err?.message
+  } else if (error instanceof ApiError) {
+    statusCode = error?.statusCode;
+    message = error?.message;
+    errorMessages = error?.message
       ? [
           {
             path: "",
-            message: err?.message,
+            message: error?.message,
           },
         ]
       : [];
@@ -50,9 +49,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     success: false,
     message,
     errorMessages,
-    stack: config.env !== "production" ? err?.stack : undefined,
+    stack: config.env !== "production" ? error?.stack : undefined,
   });
-
   next();
 };
 
