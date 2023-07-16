@@ -3,6 +3,11 @@ import { IReview, ReviewModel } from "./review.interface";
 
 const ReviewSchema = new Schema<IReview, ReviewModel>(
   {
+    id: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     email: {
       type: String,
       required: true,

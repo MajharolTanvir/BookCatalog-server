@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
-import { IUser, IUserLogin } from "./user.interface";
+import { IUser, IUserLogin, IWishlist } from "./user.interface";
 import { User } from "./user.model";
 import config from "../../../config";
-import { Secret } from "jsonwebtoken";
+import { JwtPayload, Secret } from "jsonwebtoken";
 import { JwtHelper } from "../../../helper/jwtHelper";
 import bcrypt from "bcrypt";
 
@@ -63,7 +63,25 @@ const loginUser = async (userData: IUserLogin) => {
   };
 };
 
+const addWishlist = async (
+  email: string,
+  wishlist: IWishlist,
+  user: JwtPayload,
+) => {
+  if (user?.userEmail !== email) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden access");
+  }
+
+  const updatedUser = await User.findOneAndUpdate(
+    { email },
+    { $addToSet: { bookStatus: wishlist?.bookStatus } },
+    { new: true },
+  );
+  return updatedUser;
+};
+
 export const UserService = {
   signUpUser,
   loginUser,
+  addWishlist,
 };

@@ -23,6 +23,16 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
     },
+    bookStatus: {
+      bookId: {
+        type: Schema.Types.ObjectId,
+        ref: "Book",
+        unique: true,
+      },
+      status: {
+        enum: ["Buying soon", "Reading", "Reading soon", "Finished"],
+      },
+    },
   },
   {
     timestamps: true,
