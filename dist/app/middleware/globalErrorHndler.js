@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ApiError_1 = __importDefault(require("../../errors/ApiError"));
 const handleValidationError_1 = require("../../errors/handleValidationError");
 const config_1 = __importDefault(require("../../config"));
+const handleDuplicateError_1 = __importDefault(require("../../errors/handleDuplicateError"));
 const globalErrorHandler = (err, req, res, next) => {
     res.status(400).json({ err: err });
     let statusCode = 500;
@@ -13,6 +14,12 @@ const globalErrorHandler = (err, req, res, next) => {
     let errorMessages = [];
     if ((err === null || err === void 0 ? void 0 : err.name) === "ValidationError") {
         const simplifiedError = (0, handleValidationError_1.handleValidationError)(err);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessages = simplifiedError.errorMessages;
+    }
+    else if (err.name === "MongoServerError" && err.code === 11000) {
+        const simplifiedError = (0, handleDuplicateError_1.default)(err);
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
         errorMessages = simplifiedError.errorMessages;
