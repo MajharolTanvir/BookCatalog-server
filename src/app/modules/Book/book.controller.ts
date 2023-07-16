@@ -46,9 +46,9 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userEmail = req.user as JwtPayload;
+  const user = req.user as JwtPayload;
   const { ...bookData } = req.body;
-  const result = await BookService.updateBook(id, bookData, userEmail);
+  const result = await BookService.updateBook(id, bookData, user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -58,9 +58,24 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteBook = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = req.user as JwtPayload;
+
+  const result = await BookService.deleteBook(id, user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Book deleted successfully!",
+    data: result,
+  });
+});
+
 export const BookController = {
   addNewBook,
   getAllBooks,
   getSingleBook,
   updateBook,
+  deleteBook,
 };

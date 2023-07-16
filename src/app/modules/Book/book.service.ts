@@ -54,14 +54,10 @@ const getSingleBook = async (id: string) => {
   return book;
 };
 
-const updateBook = async (
-  id: string,
-  updatedData: IBook,
-  userEmail: JwtPayload,
-) => {
+const updateBook = async (id: string, updatedData: IBook, user: JwtPayload) => {
   const availableBook = await Book.findOne({ _id: id });
 
-  if (availableBook && userEmail?.userEmail !== availableBook?.addedBy) {
+  if (availableBook && user?.userEmail !== availableBook?.addedBy) {
     throw new ApiError(httpStatus.FORBIDDEN, "Forbidden Access");
   }
   const result = await Book.findByIdAndUpdate({ _id: id }, updatedData, {
@@ -70,9 +66,19 @@ const updateBook = async (
   return result;
 };
 
+const deleteBook = async (id: string, user: JwtPayload) => {
+  const availableBook = await Book.findOne({ _id: id });
+  if (availableBook && user?.userEmail !== availableBook?.addedBy) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden Access");
+  }
+  const result = await Book.findByIdAndDelete({ _id: id });
+  return result;
+};
+
 export const BookService = {
   addNewBook,
   getAllBooks,
   getSingleBook,
   updateBook,
+  deleteBook,
 };
