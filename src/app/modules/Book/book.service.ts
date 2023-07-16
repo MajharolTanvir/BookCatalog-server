@@ -3,6 +3,7 @@ import ApiError from "../../../errors/ApiError";
 import { IBook, IBookFilters } from "./book.interface";
 import { Book } from "./book.model";
 import { bookSearchableFields } from "./book.constant";
+import { JwtPayload } from "jsonwebtoken";
 
 const addNewBook = async (bookData: IBook): Promise<IBook | null> => {
   const addedBook = await Book.create(bookData);
@@ -53,8 +54,25 @@ const getSingleBook = async (id: string) => {
   return book;
 };
 
+const updateBook = async (
+  id: string,
+  updatedData: IBook,
+  userEmail: JwtPayload,
+) => {
+  const availableBook = await Book.findOne({ _id: id });
+
+  if (availableBook && userEmail?.userEmail !== availableBook?.addedBy) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden Access");
+  }
+  const result = await Book.findByIdAndUpdate({ _id: id }, updatedData, {
+    new: true,
+  });
+  return result;
+};
+
 export const BookService = {
   addNewBook,
   getAllBooks,
   getSingleBook,
+  updateBook,
 };
