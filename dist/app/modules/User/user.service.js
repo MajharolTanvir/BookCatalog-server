@@ -20,6 +20,10 @@ const jwtHelper_1 = require("../../../helper/jwtHelper");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../../config"));
 const signUpUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
+    const userExist = yield user_model_1.User.findOne({ email: userData.email });
+    if (userExist) {
+        throw new ApiError_1.default(http_status_1.default.CONFLICT, "This email already exist");
+    }
     const createdUser = yield user_model_1.User.create(userData);
     if (!createdUser) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "Failed To Sign Up");
@@ -51,5 +55,5 @@ const loginUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.UserService = {
     signUpUser,
-    loginUser
+    loginUser,
 };
