@@ -80,8 +80,18 @@ const addWishlist = async (
   return updatedUser;
 };
 
+const getUser = async (email: string, user: JwtPayload) => {
+  if (user?.userEmail !== email) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden access");
+  }
+
+  const findUser = await User.findOne({ email: email });
+  return findUser;
+};
+
 export const UserService = {
   signUpUser,
   loginUser,
   addWishlist,
+  getUser,
 };

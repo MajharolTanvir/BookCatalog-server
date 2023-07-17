@@ -53,8 +53,22 @@ const addWishlist = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getUser = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload;
+  const email = req.body;
+  const result = await UserService.getUser(email, user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get user successfully!",
+    data: result,
+  });
+});
+
 export const UserController = {
   signUpUser,
   loginUser,
   addWishlist,
+  getUser,
 };
