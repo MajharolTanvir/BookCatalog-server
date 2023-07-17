@@ -42,14 +42,14 @@ const loginUser = async (userData: IUserLogin) => {
 
   const isPasswordMatched = await bcrypt.compare(
     password,
-    isUserExist?.password,
+    isUserExist.password,
   );
 
   if (isUserExist.password && !isPasswordMatched) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Password is incorrect");
   }
 
-  const { email: userEmail, name } = isUserExist;
+  const { email: userEmail, firstName, lastName } = isUserExist;
   const accessToken = JwtHelper.createToken(
     { userEmail },
     config.jwt.secret as Secret,
@@ -63,7 +63,8 @@ const loginUser = async (userData: IUserLogin) => {
   );
 
   return {
-    name,
+    firstName,
+    lastName,
     email,
     accessToken,
     refreshToken,
