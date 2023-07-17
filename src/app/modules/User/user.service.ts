@@ -1,13 +1,18 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
-import { IUser, IUserLogin, IWishlist } from "./user.interface";
+import { IUser, IUserLogin } from "./user.interface";
 import { User } from "./user.model";
-import config from "../../../config";
-import { JwtPayload, Secret } from "jsonwebtoken";
 import { JwtHelper } from "../../../helper/jwtHelper";
 import bcrypt from "bcrypt";
+import config from "../../../config";
+import { Secret } from "jsonwebtoken";
 
 const signUpUser = async (userData: IUser) => {
+  const userExist = await User.findOne({ email: userData.email });
+  if (userExist) {
+    throw new ApiError(httpStatus.CONFLICT, "This email already exist");
+  }
+
   const createdUser = await User.create(userData);
 
   if (!createdUser) {
@@ -63,35 +68,7 @@ const loginUser = async (userData: IUserLogin) => {
   };
 };
 
-const addWishlist = async (
-  email: string,
-  wishlist: IWishlist,
-  user: JwtPayload,
-) => {
-  if (user?.userEmail !== email) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden access");
-  }
-
-  const updatedUser = await User.findOneAndUpdate(
-    { email },
-    { $addToSet: { bookStatus: wishlist?.bookStatus } },
-    { new: true },
-  );
-  return updatedUser;
-};
-
-const getUser = async (email: string, user: JwtPayload) => {
-  if (user?.userEmail !== email) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden access");
-  }
-
-  const findUser = await User.findOne({ email: email });
-  return findUser;
-};
-
 export const UserService = {
   signUpUser,
   loginUser,
-  addWishlist,
-  getUser,
 };

@@ -1,18 +1,10 @@
-import { Model, Types } from "mongoose";
-
-export type IWishlist = {
-  bookStatus: {
-    bookId: Types.ObjectId;
-    status: "Buying soon" | "Reading" | "Reading soon" | "Finished";
-  }[];
-};
+import { Model } from "mongoose";
 
 export type IUser = {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  bookStatus?: IWishlist;
 };
 
 export type IUserLogin = {

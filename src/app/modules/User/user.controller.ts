@@ -4,7 +4,6 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { UserService } from "./user.service";
 import config from "../../../config";
-import { JwtPayload } from "jsonwebtoken";
 
 const signUpUser = catchAsync(async (req: Request, res: Response) => {
   const userData = req.body;
@@ -40,35 +39,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const addWishlist = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user as JwtPayload;
-  const { email, ...wishlistData } = req.body;
-  const result = await UserService.addWishlist(email, wishlistData, user);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Wishlist added successfully!",
-    data: result,
-  });
-});
-
-const getUser = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user as JwtPayload;
-  const email = req.body;
-  const result = await UserService.getUser(email, user);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Get user successfully!",
-    data: result,
-  });
-});
-
 export const UserController = {
   signUpUser,
   loginUser,
-  addWishlist,
-  getUser,
 };

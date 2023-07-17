@@ -18,32 +18,10 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
       unique: true,
-      match: /^\S+@\S+\.\S+$/,
     },
     password: {
       type: String,
       required: true,
-    },
-    bookStatus: {
-      bookId: {
-        type: Schema.Types.ObjectId,
-        ref: "Book",
-        unique: true,
-      },
-      status: {
-        type: String,
-        validate: {
-          validator: function (value: string) {
-            return [
-              "Buying soon",
-              "Reading",
-              "Reading soon",
-              "Finished",
-            ].includes(value);
-          },
-          message: "Invalid status value",
-        },
-      },
     },
   },
   {
