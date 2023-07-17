@@ -8,18 +8,18 @@ type DuplicateKeyError = {
 } & Error;
 
 const handleDuplicateError = (
-  error: DuplicateKeyError,
+  err: DuplicateKeyError,
 ): IGenericErrorResponse => {
   const errors: IGenericErrorMessage[] = [
     {
       path: "",
-      message: error.message,
+      message: err.message,
     },
   ];
   const statusCode = 400;
   let duplicateValue = null;
-  if (error.keyValue) {
-    duplicateValue = Object.keys(error.keyPattern);
+  if (err.keyValue) {
+    duplicateValue = Object.keys(err.keyPattern);
   }
   return {
     statusCode,

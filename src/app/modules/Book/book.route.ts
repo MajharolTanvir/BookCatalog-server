@@ -5,10 +5,10 @@ import auth from "../../middleware/auth";
 
 const router = express.Router();
 
-router.patch("/:id", auth(), BookController.updateBook);
 router.get("/", BookController.getAllBooks);
 router.get("/:id", BookController.getSingleBook);
 router.delete("/:id", auth(), BookController.deleteBook);
+router.patch("/:id", auth(), BookController.updateBook);
 router.post("/add-new-book", BookController.addNewBook);
 
 export const BookRoutes = router;
