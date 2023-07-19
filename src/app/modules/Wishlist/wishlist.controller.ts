@@ -17,6 +17,19 @@ const addNewWishlist = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleWishList = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await WishListService.getSingleWishList(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get WishList successfully!",
+    data: result,
+  });
+});
+
 // const getAllWishList = catchAsync(async (req: Request, res: Response) => {
 //   const filters = pick(req.query, bookFilterableFields);
 //   const result = await BookService.getAllBooks(filters);
@@ -44,6 +57,7 @@ const addNewWishlist = catchAsync(async (req: Request, res: Response) => {
 
 export const WishListController = {
   addNewWishlist,
+  getSingleWishList,
   //   getAllWishList,
   //   deleteWishList,
 };

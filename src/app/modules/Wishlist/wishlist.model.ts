@@ -6,11 +6,11 @@ const WishListSchema = new Schema<IWishlist, WishListModel>(
     id: {
       type: String,
       required: true,
+      unique: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     status: {
       type: String,

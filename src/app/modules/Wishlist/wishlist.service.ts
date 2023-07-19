@@ -14,6 +14,12 @@ const addNewWishList = async (
   return addedWishList;
 };
 
+const getSingleWishList = async (id: string): Promise<IWishlist | null> => {
+  const getWishList = await WishList.findOne({ id: id });
+
+  return getWishList;
+};
+
 // const getAllBooks = async (filters: IBookFilters) => {
 //   const { searchTerm, ...filtersData } = filters;
 
@@ -50,5 +56,6 @@ const addNewWishList = async (
 
 export const WishListService = {
   addNewWishList,
+  getSingleWishList,
   //   getAllBooks,
 };
