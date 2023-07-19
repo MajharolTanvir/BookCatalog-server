@@ -10,7 +10,6 @@ const addNewWishList = async (
   const checkData = await WishList.findOne({
     $and: [{ id: wishlistData.id }, { email: wishlistData.email }],
   });
-  console.log(checkData);
   if (checkData) {
     throw new ApiError(httpStatus.CONFLICT, "Data already added");
   }
@@ -22,8 +21,13 @@ const addNewWishList = async (
   return addedWishList;
 };
 
-const getSingleWishList = async (id: string): Promise<IWishlist | null> => {
-  const getWishList = await WishList.findOne({ id: id });
+const getSingleWishList = async (
+  id: string,
+  email: string,
+): Promise<IWishlist | null> => {
+  const getWishList = await WishList.findOne({
+    $and: [{ id: id }, { email: email }],
+  });
 
   return getWishList;
 };
@@ -36,8 +40,18 @@ const getAllWishlist = async (email: string) => {
   return books;
 };
 
+const deleteWishList = async (id: string, email: string) => {
+  const findWishlist = await WishList.findOne({
+    $and: [{ id: id }, { email: email }],
+  });
+  const result = await WishList.findByIdAndDelete({ _id: findWishlist!._id });
+
+  return result;
+};
+
 export const WishListService = {
   addNewWishList,
   getSingleWishList,
   getAllWishlist,
+  deleteWishList,
 };

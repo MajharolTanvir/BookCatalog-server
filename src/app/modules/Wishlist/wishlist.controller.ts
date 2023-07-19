@@ -17,9 +17,9 @@ const addNewWishlist = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleWishList = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id, email } = req.params;
 
-  const result = await WishListService.getSingleWishList(id);
+  const result = await WishListService.getSingleWishList(id, email);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -43,22 +43,22 @@ const getAllWishList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const deleteWishList = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
+const deleteWishList = catchAsync(async (req: Request, res: Response) => {
+  const { id, email } = req.params;
 
-//   const result = await BookService.deleteBook(id);
+  const result = await WishListService.deleteWishList(id, email);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Book deleted successfully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Book deleted successfully!",
+    data: result,
+  });
+});
 
 export const WishListController = {
   addNewWishlist,
   getSingleWishList,
   getAllWishList,
-  //   deleteWishList,
+  deleteWishList,
 };
