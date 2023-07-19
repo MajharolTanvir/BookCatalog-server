@@ -24,16 +24,16 @@ const addReadList = async (
   return addedReadList;
 };
 
-// const getSingleWishList = async (
-//   id: string,
-//   email: string,
-// ): Promise<IWishlist | null> => {
-//   const getWishList = await WishList.findOne({
-//     $and: [{ id: id }, { email: email }],
-//   });
+const getSingleReadList = async (
+  id: string,
+  email: string,
+): Promise<IReadList | null> => {
+  const getReadList = await ReadList.findOne({
+    $and: [{ id: id }, { email: email }],
+  });
 
-//   return getWishList;
-// };
+  return getReadList;
+};
 
 // const getAllWishlist = async (email: string) => {
 //   const wishlistsData = await WishList.find({ email: email });
@@ -54,7 +54,7 @@ const addReadList = async (
 
 export const ReadListService = {
   addReadList,
-  //   getSingleWishList,
+  getSingleReadList,
   //   getAllWishlist,
   //   deleteWishList,
 };

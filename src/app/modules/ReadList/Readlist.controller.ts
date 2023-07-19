@@ -16,18 +16,18 @@ const addReadList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getSingleWishList = catchAsync(async (req: Request, res: Response) => {
-//   const { id, email } = req.params;
+const getSingleReadList = catchAsync(async (req: Request, res: Response) => {
+  const { id, email } = req.params;
 
-//   const result = await WishListService.getSingleWishList(id, email);
+  const result = await ReadListService.getSingleReadList(id, email);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Get WishList successfully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get WishList successfully!",
+    data: result,
+  });
+});
 
 // const getAllWishList = catchAsync(async (req: Request, res: Response) => {
 //   const { email } = req.query;
@@ -58,7 +58,7 @@ const addReadList = catchAsync(async (req: Request, res: Response) => {
 
 export const ReadListController = {
   addReadList,
-  //   getSingleWishList,
+  getSingleReadList,
   //   getAllWishList,
   //   deleteWishList,
 };
