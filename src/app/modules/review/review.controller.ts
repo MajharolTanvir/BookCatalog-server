@@ -3,12 +3,10 @@ import sendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchAsync";
 import { Request, Response } from "express";
 import { ReviewService } from "./review.service";
-import { JwtPayload } from "jsonwebtoken";
 
 const addReview = catchAsync(async (req: Request, res: Response) => {
   const reviewData = req.body;
-  const user = req.user as JwtPayload;
-  const result = await ReviewService.addReview(reviewData, user);
+  const result = await ReviewService.addReview(reviewData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -19,7 +17,8 @@ const addReview = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getReviews = catchAsync(async (req: Request, res: Response) => {
-  const result = await ReviewService.getReviews();
+  const id = req.params.id;
+  const result = await ReviewService.getReviews(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -3,7 +3,6 @@ import ApiError from "../../../errors/ApiError";
 import { IBook, IBookFilters } from "./book.interface";
 import { Book } from "./book.model";
 import { bookSearchableFields } from "./book.constant";
-import { JwtPayload } from "jsonwebtoken";
 
 const addNewBook = async (bookData: IBook): Promise<IBook | null> => {
   const addedBook = await Book.create(bookData);
@@ -11,7 +10,6 @@ const addNewBook = async (bookData: IBook): Promise<IBook | null> => {
   if (!addedBook) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Failed to add book");
   }
-
   return addedBook;
 };
 
@@ -58,23 +56,14 @@ const getSingleBook = async (id: string) => {
   }
 };
 
-const updateBook = async (id: string, updatedData: IBook, user: JwtPayload) => {
-  const availableBook = await Book.findOne({ _id: id });
-
-  if (availableBook && user?.userEmail !== availableBook?.addedBy) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden Access");
-  }
+const updateBook = async (id: string, updatedData: IBook) => {
   const result = await Book.findByIdAndUpdate({ _id: id }, updatedData, {
     new: true,
   });
   return result;
 };
 
-const deleteBook = async (id: string, user: JwtPayload) => {
-  const availableBook = await Book.findOne({ _id: id });
-  if (availableBook && user?.userEmail !== availableBook?.addedBy) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden Access");
-  }
+const deleteBook = async (id: string) => {
   const result = await Book.findByIdAndDelete({ _id: id });
   return result;
 };

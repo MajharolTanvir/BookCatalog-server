@@ -1,7 +1,7 @@
-import { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 
 export type IReview = {
-  id: Types.ObjectId;
+  id: string;
   email: string;
   reviewText: string;
 };

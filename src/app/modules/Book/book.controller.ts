@@ -5,10 +5,9 @@ import { Request, Response } from "express";
 import pick from "../../../shared/pick";
 import { bookFilterableFields } from "./book.constant";
 import { BookService } from "./book.service";
-import { JwtPayload } from "jsonwebtoken";
 
 const addNewBook = catchAsync(async (req: Request, res: Response) => {
-  const { ...bookData } = req.body;
+  const bookData = req.body;
 
   const result = await BookService.addNewBook(bookData);
 
@@ -46,9 +45,8 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = req.user as JwtPayload;
-  const { ...bookData } = req.body;
-  const result = await BookService.updateBook(id, bookData, user);
+  const bookData = req.body;
+  const result = await BookService.updateBook(id, bookData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -60,9 +58,8 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = req.user as JwtPayload;
 
-  const result = await BookService.deleteBook(id, user);
+  const result = await BookService.deleteBook(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
