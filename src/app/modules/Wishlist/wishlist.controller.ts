@@ -6,7 +6,6 @@ import { WishListService } from "./wishlist.service";
 
 const addNewWishlist = catchAsync(async (req: Request, res: Response) => {
   const wishListData = req.body;
-
   const result = await WishListService.addNewWishList(wishListData);
 
   sendResponse(res, {
@@ -30,17 +29,19 @@ const getSingleWishList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getAllWishList = catchAsync(async (req: Request, res: Response) => {
-//   const filters = pick(req.query, bookFilterableFields);
-//   const result = await BookService.getAllBooks(filters);
+const getAllWishList = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.query;
+  const emailString = typeof email === "string" ? email : "";
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Books retrieved successfully!",
-//     data: result,
-//   });
-// });
+  const result = await WishListService.getAllWishlist(emailString);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Wishlists retrieved successfully!",
+    data: result,
+  });
+});
 
 // const deleteWishList = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -58,6 +59,6 @@ const getSingleWishList = catchAsync(async (req: Request, res: Response) => {
 export const WishListController = {
   addNewWishlist,
   getSingleWishList,
-  //   getAllWishList,
+  getAllWishList,
   //   deleteWishList,
 };

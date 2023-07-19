@@ -2,10 +2,18 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { IWishlist } from "./wishlist.interface";
 import { WishList } from "./wishlist.model";
+import { Book } from "../Book/book.model";
 
 const addNewWishList = async (
   wishlistData: IWishlist,
 ): Promise<IWishlist | null> => {
+  const checkData = await WishList.findOne({
+    $and: [{ id: wishlistData.id }, { email: wishlistData.email }],
+  });
+  console.log(checkData);
+  if (checkData) {
+    throw new ApiError(httpStatus.CONFLICT, "Data already added");
+  }
   const addedWishList = await WishList.create(wishlistData);
 
   if (!addedWishList) {
@@ -20,42 +28,16 @@ const getSingleWishList = async (id: string): Promise<IWishlist | null> => {
   return getWishList;
 };
 
-// const getAllBooks = async (filters: IBookFilters) => {
-//   const { searchTerm, ...filtersData } = filters;
+const getAllWishlist = async (email: string) => {
+  const wishlistsData = await WishList.find({ email: email });
+  const wishlists = wishlistsData.map((wishData) => wishData.id);
+  const books = await Book.find({ _id: { $in: wishlists } });
 
-//   const conditions = [];
-//   if (searchTerm) {
-//     conditions.push({
-//       $or: bookSearchableFields.map((field) => ({
-//         [field]: {
-//           $regex: searchTerm,
-//           $options: "i",
-//         },
-//       })),
-//     });
-//   }
-
-//   if (Object.keys(filtersData).length) {
-//     conditions.push({
-//       $and: Object.entries(filtersData).map(([field, value]) => ({
-//         [field]: value,
-//       })),
-//     });
-//   }
-
-//   const whereConditions = conditions.length > 0 ? { $and: conditions } : {};
-
-//   const books = await Book.find(whereConditions);
-
-//   if (!books) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, "Failed to get books");
-//   }
-
-//   return books;
-// };
+  return books;
+};
 
 export const WishListService = {
   addNewWishList,
   getSingleWishList,
-  //   getAllBooks,
+  getAllWishlist,
 };
