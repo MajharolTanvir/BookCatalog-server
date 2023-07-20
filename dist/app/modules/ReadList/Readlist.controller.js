@@ -12,57 +12,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookController = void 0;
+exports.ReadListController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
-const pick_1 = __importDefault(require("../../../shared/pick"));
-const book_constant_1 = require("./book.constant");
-const book_service_1 = require("./book.service");
-const addNewBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const bookData = req.body;
-    const result = yield book_service_1.BookService.addNewBook(bookData);
+const Readlist_server_1 = require("./Readlist.server");
+const addReadList = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const readListData = req.body;
+    const result = yield Readlist_server_1.ReadListService.addReadList(readListData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Book added successfully!",
+        message: "Read list added successfully!",
         data: result,
     });
 }));
-const getAllBooks = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const filters = (0, pick_1.default)(req.query, book_constant_1.bookFilterableFields);
-    const result = yield book_service_1.BookService.getAllBooks(filters);
+const getSingleReadList = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, email } = req.params;
+    const result = yield Readlist_server_1.ReadListService.getSingleReadList(id, email);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Books retrieved successfully!",
+        message: "Get read list successfully!",
         data: result,
     });
 }));
-const getSingleBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllReadList = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.query;
+    const emailString = typeof email === "string" ? email : "";
+    const result = yield Readlist_server_1.ReadListService.getAllReadList(emailString);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Read list retrieved successfully!",
+        data: result,
+    });
+}));
+const updateReadList = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield book_service_1.BookService.getSingleBook(id);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: "Book retrieved successfully!",
-        data: result,
-    });
-}));
-const updateBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const bookData = req.body;
-    const result = yield book_service_1.BookService.updateBook(id, bookData);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: "Book updated successfully!",
-        data: result,
-    });
-}));
-const deleteBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const result = yield book_service_1.BookService.deleteBook(id);
+    const data = req.body;
+    const result = yield Readlist_server_1.ReadListService.updateReadList(id, data);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -70,10 +59,9 @@ const deleteBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
-exports.BookController = {
-    addNewBook,
-    getAllBooks,
-    getSingleBook,
-    updateBook,
-    deleteBook,
+exports.ReadListController = {
+    addReadList,
+    getSingleReadList,
+    getAllReadList,
+    updateReadList,
 };
