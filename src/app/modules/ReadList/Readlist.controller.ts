@@ -11,7 +11,7 @@ const addReadList = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "WishList added successfully!",
+    message: "Read list added successfully!",
     data: result,
   });
 });
@@ -24,41 +24,42 @@ const getSingleReadList = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Get WishList successfully!",
+    message: "Get read list successfully!",
     data: result,
   });
 });
 
-// const getAllWishList = catchAsync(async (req: Request, res: Response) => {
-//   const { email } = req.query;
-//   const emailString = typeof email === "string" ? email : "";
+const getAllReadList = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.query;
+  const emailString = typeof email === "string" ? email : "";
 
-//   const result = await WishListService.getAllWishlist(emailString);
+  const result = await ReadListService.getAllReadList(emailString);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Wishlists retrieved successfully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Read list retrieved successfully!",
+    data: result,
+  });
+});
 
-// const deleteWishList = catchAsync(async (req: Request, res: Response) => {
-//   const { id, email } = req.params;
+const updateReadList = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data = req.body;
 
-//   const result = await WishListService.deleteWishList(id, email);
+  const result = await ReadListService.updateReadList(id, data);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Book deleted successfully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Book deleted successfully!",
+    data: result,
+  });
+});
 
 export const ReadListController = {
   addReadList,
   getSingleReadList,
-  //   getAllWishList,
-  //   deleteWishList,
+  getAllReadList,
+  updateReadList,
 };

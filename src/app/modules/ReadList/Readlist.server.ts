@@ -1,26 +1,16 @@
-import httpStatus from "http-status";
-import ApiError from "../../../errors/ApiError";
-// import { Book } from "../Book/book.model";
 import { IReadList } from "./Readlist.interface";
 import { ReadList } from "./Readlist.model";
+
+type IReadLists = {
+  reading: boolean;
+  readSoon: boolean;
+  finish: boolean;
+};
 
 const addReadList = async (
   readListData: IReadList,
 ): Promise<IReadList | null> => {
-  const checkData = await ReadList.findOne({
-    $and: [{ id: readListData.id }, { email: readListData.email }],
-  });
-  if (checkData) {
-    throw new ApiError(
-      httpStatus.CONFLICT,
-      `${readListData.status} already added`,
-    );
-  }
   const addedReadList = await ReadList.create(readListData);
-
-  if (!addedReadList) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Failed to add Wishlist");
-  }
   return addedReadList;
 };
 
@@ -35,26 +25,22 @@ const getSingleReadList = async (
   return getReadList;
 };
 
-// const getAllWishlist = async (email: string) => {
-//   const wishlistsData = await WishList.find({ email: email });
-//   const wishlists = wishlistsData.map((wishData) => wishData.id);
-//   const books = await Book.find({ _id: { $in: wishlists } });
+const getAllReadList = async (email: string) => {
+  const getReadList = await ReadList.find({ email: email }).populate("id");
 
-//   return books;
-// };
+  return getReadList;
+};
 
-// const deleteWishList = async (id: string, email: string) => {
-//   const findWishlist = await WishList.findOne({
-//     $and: [{ id: id }, { email: email }],
-//   });
-//   const result = await WishList.findByIdAndDelete({ _id: findWishlist!._id });
-
-//   return result;
-// };
+const updateReadList = async (id: string, payload: IReadLists) => {
+  const updateData = await ReadList.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return updateData;
+};
 
 export const ReadListService = {
   addReadList,
   getSingleReadList,
-  //   getAllWishlist,
-  //   deleteWishList,
+  getAllReadList,
+  updateReadList,
 };
