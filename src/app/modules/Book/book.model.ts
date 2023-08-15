@@ -24,6 +24,10 @@ const BookSchema = new Schema<IBook, BookModel>(
       type: String,
       required: true,
     },
+    year: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

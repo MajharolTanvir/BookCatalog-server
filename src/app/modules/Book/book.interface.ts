@@ -6,6 +6,7 @@ export type IBook = {
   genre: string;
   publicationDate: string;
   addedBy: string;
+  year: number;
 };
 
 export type IBookFilters = {
